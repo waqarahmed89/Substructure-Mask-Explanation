@@ -87,10 +87,10 @@ def SMEG_explain_for_substructure(seed, task_name, rgcn_hidden_feats=[64, 64, 64
 
 
 
-for task in ['ESOL', 'Mutagenicity', 'hERG', 'BBBP']:
-# for task in ['Mutagenicity']:
-    for sub_type in ['fg', 'murcko', 'brics', 'brics_emerge', 'murcko_emerge']:
-    # for sub_type in ['fg']:
+# for task in ['ESOL', 'Mutagenicity', 'hERG', 'BBBP']:
+for task in ['ESOL']:
+    # for sub_type in ['fg', 'murcko', 'brics', 'brics_emerge', 'murcko_emerge']:
+    for sub_type in ['brics']:
         # load
         with open('../result/hyperparameter_{}.pkl'.format(task), 'rb') as f:
             hyperparameter = pkl.load(f)

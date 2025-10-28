@@ -470,8 +470,24 @@ def run_an_eval_epoch(args, model, data_loader, loss_criterion, out_path, seed=0
     prediction_pd['label'] = y_true_list
     prediction_pd['pred'] = y_pred_list
     prediction_pd['sub_name'] = sub_name_list
+    # Before saving, pad or truncate arrays to make them uniform
+    max_len = max(len(x) for x in smask_idx_list)
+    padded_smask_idx_list = []
+    for arr in smask_idx_list:
+        if isinstance(arr, (list, np.ndarray)):
+            # Pad with -1 or appropriate value
+            padded = np.pad(arr, (0, max_len - len(arr)), 
+                          mode='constant', constant_values=-1)
+        else:
+            # Handle scalar values
+            padded = np.array([-1] * max_len)
+            padded[0] = arr
+        padded_smask_idx_list.append(padded)
+    
+    # Save the padded array
     if out_path is not None:
-        np.save(out_path + '_smask_index.npy', smask_idx_list)
+        # np.save(out_path + '_smask_index.npy', smask_idx_list)
+        np.save(out_path + '_smask_index.npy', np.array(padded_smask_idx_list))
         prediction_pd.to_csv(out_path + '_prediction.csv', index=False)
     if args['classification']:
         y_pred_label = [1 if x >= 0.5 else 0 for x in y_pred_list]
